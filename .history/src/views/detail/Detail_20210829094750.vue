@@ -53,6 +53,7 @@ export default {
       topImages: [],
       goods: {},
       shop: {},
+      itemImgListener: null,
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},

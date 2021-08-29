@@ -25,7 +25,6 @@ import DetailCommentInfo from './childComps/DetailCommentInfo';
 import Scroll from 'components/common/scroll/Scroll';
 import GoodList from 'components/content/goods/GoodsList';
 
-import { itemListenerMixin } from 'common/mixin';
 import {
   getDetail,
   getRecommend,
@@ -33,6 +32,7 @@ import {
   Shop,
   GoodsParam
 } from 'network/detail';
+import { debounce } from 'common/utils';
 export default {
   name: 'Detail',
   components: {
@@ -46,13 +46,13 @@ export default {
     Scroll,
     GoodList
   },
-  mixins: [itemListenerMixin],
   data() {
     return {
       iid: null,
       topImages: [],
       goods: {},
       shop: {},
+      itemImgListener: null,
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},
@@ -122,8 +122,15 @@ export default {
       }
     }
   },
-   mounted() {
-   },
+  mounted() {
+    // 1.图片加载完成的事件监听
+    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    //对监听的事件进行保存
+    this.itemImgListener = () => {
+      refresh();
+    };
+    this.$bus.$on('itemImageLoad', this.itemImgListener);
+  }
 };
 </script>
 

@@ -33,6 +33,7 @@ import {
   Shop,
   GoodsParam
 } from 'network/detail';
+import { debounce } from 'common/utils';
 export default {
   name: 'Detail',
   components: {
@@ -53,6 +54,7 @@ export default {
       topImages: [],
       goods: {},
       shop: {},
+      itemImgListener: null,
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},
@@ -122,8 +124,6 @@ export default {
       }
     }
   },
-   mounted() {
-   },
 };
 </script>
 

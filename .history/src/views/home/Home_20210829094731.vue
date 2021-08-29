@@ -65,6 +65,7 @@ export default {
       isTabFixed: false,
       taboffsetTop: 0,
       saveY: 0,
+      itemImgListener: null,
       titles: ['流行', '精选', '新款'],
       goods: {
         pop: { page: 0, list: [] },

@@ -19,7 +19,7 @@
       <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <recommend-view :recommends="recommends" />
       <feature-view />
-      <tab-controller :titles="titles" ref="tabControl" @tabClick="tabClick" />
+      <tab-controller :titles="titles" ref="tabControl" @tabClick="tabClick"/>
       <good-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
@@ -40,7 +40,7 @@ import BackTop from 'components/content/backTop/BackTop';
 //导入网络请求
 import { getHomeMultidata, getHomeGoods } from 'network/home';
 //导入js文件
-import { itemListenerMixin } from 'common/mixin';
+import { debounce } from 'common/utils';
 export default {
   name: 'Home',
   components: {
@@ -55,7 +55,6 @@ export default {
     Scroll,
     BackTop
   },
-  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -65,6 +64,7 @@ export default {
       isTabFixed: false,
       taboffsetTop: 0,
       saveY: 0,
+      itemImgListener:null,
       titles: ['流行', '精选', '新款'],
       goods: {
         pop: { page: 0, list: [] },
@@ -89,7 +89,7 @@ export default {
     //1.保存y值
     this.saveY = this.$refs.scroll.getScrollY();
     //2.取消全局事件监听
-    this.$bus.$off('itemImageLoad', this.itemImgListener);
+    this.$bus.$off('')
   },
   created() {
     /**
@@ -102,7 +102,15 @@ export default {
     this.getHomeGoods('new');
     this.getHomeGoods('sell');
   },
-  mounted() {},
+  mounted() {
+    // 1.图片加载完成的事件监听
+    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    //对监听的事件进行保存
+    this.itemImgListener=() => {
+      refresh();
+    }
+    this.$bus.$on('itemImageLoad',this.itemImgListener);
+  },
   methods: {
     /**
      * 事件监听相关方法

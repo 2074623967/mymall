@@ -1,14 +1,16 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @tabClick="tabClick" />
+    <detail-nav-bar
+     class="detail-nav" 
+     @tabClick="tabClick"/>
     <scroll class="content" ref="scroll">
       <detail-swaper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
       <detail-param-info :param-info="paramInfo" />
-      <detail-comment-info :comment-info="commentInfo" />
-      <good-list :goods="recommmends" />
+      <detail-comment-info :comment-info="commentInfo"/>
+       <good-list :goods="recommmends" />
     </scroll>
   </div>
 </template>
@@ -20,19 +22,13 @@ import DetailBaseInfo from './childComps/DetailBaseInfo';
 import DetailShopInfo from './childComps/DetailShopInfo';
 import DetailGoodsInfo from './childComps/DetailGoodsInfo';
 import DetailParamInfo from './childComps/DetailParamInfo';
-import DetailCommentInfo from './childComps/DetailCommentInfo';
+import DetailCommentInfo from './childComps/DetailCommentInfo'
 
 import Scroll from 'components/common/scroll/Scroll';
 import GoodList from 'components/content/goods/GoodsList';
 
-import { itemListenerMixin } from 'common/mixin';
-import {
-  getDetail,
-  getRecommend,
-  Goods,
-  Shop,
-  GoodsParam
-} from 'network/detail';
+import { getDetail,getRecommend, Goods, Shop, GoodsParam } from 'network/detail';
+import { debounce } from 'common/utils';
 export default {
   name: 'Detail',
   components: {
@@ -44,23 +40,20 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     Scroll,
-    GoodList
+   GoodList
   },
-  mixins: [itemListenerMixin],
   data() {
     return {
       iid: null,
       topImages: [],
       goods: {},
       shop: {},
+      detailImgListener:null,
       detailInfo: {},
       paramInfo: {},
-      commentInfo: {},
-      recommmends: []
+      commentInfo:{},
+      recommmends:[]
     };
-  },
-  destroyed() {
-    this.$bus.$off('itemImageLoad', this.itemImgListener);
   },
   created() {
     // 1.保存传入的iid
@@ -92,21 +85,21 @@ export default {
         data.itemParams.rule
       );
       //6.取出评论信息
-      if (data.rate.cRate !== 0) {
-        this.commentInfo = data.rate.list[0];
+      if(data.rate.cRate!==0){
+        this.commentInfo=data.rate.list[0]
       }
     });
-    // 3.请求推荐数据
-    getRecommend().then(res => {
-      this.recommmends = res.data.list;
-    });
+     // 3.请求推荐数据
+     getRecommend().then(res=>{
+       this.recommmends=res.data.list
+     })
   },
   methods: {
     imageLoad() {
       this.$refs.scroll.refresh();
     },
-    tabClick(index) {
-      switch (index) {
+    tabClick(index){
+       switch (index) {
         case 0:
           this.currentType = 'pop';
           break;
@@ -116,14 +109,21 @@ export default {
         case 2:
           this.currentType = 'sell';
           break;
-        case 3:
+           case 3:
           this.currentType = 'sell';
           break;
       }
     }
   },
-   mounted() {
-   },
+  mounted() {
+    // 1.图片加载完成的事件监听
+    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    //对监听的事件进行保存
+    this.detailImgListener=() => {
+      refresh();
+    }
+    this.$bus.$on('itemImageLoad',this.detailImgListener);
+  },
 };
 </script>
 

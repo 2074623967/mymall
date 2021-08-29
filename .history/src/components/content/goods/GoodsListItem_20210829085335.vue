@@ -24,7 +24,7 @@ export default {
   },
   computed:{
     showImage(){
-      return this.goodsItem.show.image|| this.goodsItem.show.img 
+        this.goodsItem.show.image|| this.goodsItem.show.img 
     }
   },
   created() {},
