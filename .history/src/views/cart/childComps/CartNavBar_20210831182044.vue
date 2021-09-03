@@ -1,0 +1,42 @@
+<template>
+  <div class="cart-nav-bar">
+    <nav-bar class="nav-bar">
+      <div slot="center">购物车({{ cartLength }})</div>
+    </nav-bar>
+  </div>
+</template>
+
+<script>
+import NavBar from 'components/common/navbar/NavBar';
+import { mapGetters } from 'vuex';
+export default {
+  name: 'CartNavBar',
+  components: {
+    NavBar
+  },
+  computed: {
+    // ...mapGetters(['cartLength','cartList'])
+    //key可以进行改变
+    ...mapGetters({
+      cartLength:'cartLength',
+      cartList:'cartList'
+    })
+  },
+  methods: {
+    backClick() {
+      this.$router.back();
+    }
+  }
+};
+</script>
+
+<style scoped>
+.back img {
+  margin-top: 10px;
+}
+.nav-bar {
+  background-color: var(--color-tint);
+  color: #ffffff;
+  font-weight: 700;
+}
+</style>
