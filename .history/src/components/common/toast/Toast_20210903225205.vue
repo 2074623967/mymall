@@ -23,7 +23,7 @@ export default {
     };
   },
   methods:{
-    show(message='默认文字',duration=1500){
+    show(message,duration=1500){
       this.isShow=true
       this.message=message
       setTimeout(()=>{
@@ -43,7 +43,7 @@ export default {
   color: #ffffff;
   transform: translate(-50%, -50%);
   padding: 8px, 10px;
-  z-index: 999;
+  z-index：999;
   background-color: rgba(0, 0, 0, 0.75);
 }
 </style>

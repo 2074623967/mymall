@@ -39,7 +39,6 @@ import GoodList from 'components/content/goods/GoodsList';
 import { itemListenerMixin, backTopMixin } from 'common/mixin';
 import { debounce } from 'common/utils';
 import { BACKTOP_DISTANCE } from 'common/const';
-import { mapGetters } from 'vuex';
 import {
   getDetail,
   getRecommend,
@@ -138,7 +137,6 @@ export default {
   },
   mounted() {},
   methods: {
-...mapGetters(['addCart']),
     imageLoad() {
       this.refresh();
       this.getThemeTopY();
@@ -194,9 +192,6 @@ export default {
       //  },1500)
       // });
       //添加到购物车成功
-      this.addCart(product).then(res=>{
-        this.$toast.show(message,1500)
-      })
     }
   },
   mounted() {}

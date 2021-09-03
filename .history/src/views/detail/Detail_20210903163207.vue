@@ -34,12 +34,11 @@ import DetailBottomBar from './childComps/DetailBottomBar';
 
 import Scroll from 'components/common/scroll/Scroll';
 import GoodList from 'components/content/goods/GoodsList';
-// import Toast from 'components/common/toast/Toast';
+import Toast from 'components/common/toast/Toast';
 
 import { itemListenerMixin, backTopMixin } from 'common/mixin';
 import { debounce } from 'common/utils';
 import { BACKTOP_DISTANCE } from 'common/const';
-import { mapGetters } from 'vuex';
 import {
   getDetail,
   getRecommend,
@@ -59,7 +58,8 @@ export default {
     DetailCommentInfo,
     DetailBottomBar,
     Scroll,
-    GoodList
+    GoodList,
+    Toast
   },
   mixins: [itemListenerMixin, backTopMixin],
   data() {
@@ -73,8 +73,8 @@ export default {
       commentInfo: {},
       recommmends: [],
       themeTops: [],
-      // message:"",
-      // show:false,
+      message:"",
+      show:false,
       getThemeTopY: null,
       currentIndex: 0
     };
@@ -138,7 +138,6 @@ export default {
   },
   mounted() {},
   methods: {
-...mapGetters(['addCart']),
     imageLoad() {
       this.refresh();
       this.getThemeTopY();
@@ -185,18 +184,15 @@ export default {
       product.price = this.goods.realPrice;
       product.iid = this.iid;
       //将商品加入到购物车
-      // this.$store.dispatch('addCart', product).then(res => {
-      //   this.show=true
-      //   this.message=res
-      //  setTimeout(()=>{
-      //   this.show=false
-      //   this.message=""
-      //  },1500)
-      // });
+      this.$store.dispatch('addCart', product).then(res => {
+        this.show=true
+        this.message=res
+       setTimeout(()=>{
+        this.show=false
+        this.message=""
+       },1500)
+      });
       //添加到购物车成功
-      this.addCart(product).then(res=>{
-        this.$toast.show(message,1500)
-      })
     }
   },
   mounted() {}

@@ -23,7 +23,7 @@ export default {
     };
   },
   methods:{
-    show(message='默认文字',duration=1500){
+    show(message,duration=1500){
       this.isShow=true
       this.message=message
       setTimeout(()=>{
